@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@page { size: A4; margin: 2cm; }
+body { font-family: "Microsoft YaHei", "SimSun", sans-serif; font-size: 11pt; line-height: 1.6; color: #222; }
+h1 { text-align: center; font-size: 20pt; margin-top: 60px; color: #1a1a1a; }
+h2 { font-size: 14pt; border-bottom: 2px solid #2c5f8a; padding-bottom: 5px; margin-top: 25px; color: #2c5f8a; }
+h3 { font-size: 12pt; margin-top: 15px; color: #333; }
+p { margin: 6px 0; }
+.cover { text-align: center; margin-top: 80px; }
+.cover-meta { margin: 20px auto; font-size: 13pt; line-height: 2.2; max-width: 500px; }
+.cover-meta span { display: inline-block; width: 120px; text-align: right; padding-right: 10px; font-weight: bold; }
+.key-figures { background: #f4f8fb; border: 1px solid #c5d9e3; border-radius: 8px; padding: 15px 20px; margin: 20px 0; }
+.key-figures h3 { margin-top: 0; color: #2c5f8a; }
+.kf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.kf-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #d0d0d0; }
+.kf-item:last-child { border-bottom: none; font-weight: bold; color: #c00; font-size: 12pt; }
+table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10pt; }
+th, td { border: 1px solid #bbb; padding: 6px 8px; text-align: left; }
+th { background-color: #e8f0f7; font-weight: bold; color: #2c5f8a; }
+tr:nth-child(even) { background-color: #f9f9f9; }
+.claim-table td:nth-child(2) { text-align: right; font-family: monospace; }
+.calculation { background: #fffbe6; border: 1px solid #e6d08a; border-radius: 5px; padding: 12px; margin: 10px 0; font-size: 10pt; white-space: pre-wrap; font-family: monospace; line-height: 1.8; }
+.evidence-point { border-left: 4px solid; padding: 6px 12px; margin: 6px 0; background: #f9f9f9; }
+.evidence-point.favorable { border-color: #27ae60; }
+.evidence-point.unfavorable { border-color: #c0392b; }
+.evidence-point.missing { border-color: #e67e22; background: #fff8f0; }
+.evidence-meta { font-size: 9pt; color: #666; margin-top: 3px; }
+.legal-basis { background: #f0f7ff; border: 1px solid #b8d0e8; border-radius: 5px; padding: 10px 14px; margin: 10px 0; }
+.legal-basis li { margin: 4px 0; font-size: 10pt; }
+.strength { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10pt; font-weight: bold; }
+.strength.strong { background: #d4edda; color: #155724; }
+.strength.medium { background: #fff3cd; color: #856404; }
+.strength.weak { background: #f8d7da; color: #721c24; }
+.summary-box { background: #2c5f8a; color: white; border-radius: 8px; padding: 15px 20px; margin: 20px 0; }
+.summary-box h3 { color: white; margin-top: 0; }
+.summary-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.3); font-size: 11pt; }
+.summary-row:last-child { border-bottom: none; font-weight: bold; font-size: 13pt; }
+.page-break { page-break-before: always; }
+.footer { text-align: center; font-size: 9pt; color: #888; margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px; }
+.section-desc { color: #555; font-style: italic; margin: 8px 0 12px; font-size: 10pt; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+.info-item { display: flex; }
+.info-label { font-weight: bold; min-width: 100px; }
+.misconception { border-left: 4px solid #e67e22; padding: 8px 14px; margin: 10px 0; background: #fff8f0; border-radius: 4px; }
+.misconception strong { color: #c0392b; display: block; margin-bottom: 4px; }
+.misconception p { margin: 4px 0; font-size: 10pt; color: #333; }
+.legal-ref { color: #2c5f8a !important; font-style: italic; font-size: 9pt !important; }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<h1>劳动仲裁证据分析报告</h1>
+<div class="cover">
+  <div class="cover-meta">
+    <div><span>当事人：</span>{{ username }}</div>
+    <div><span>公司名称：</span>{{ company_name }}</div>
+    <div><span>证据期间：</span>{{ period_start }} — {{ period_end }}</div>
+    <div><span>基准月薪：</span>{{ "%.2f"|format(base_salary) }} 元</div>
+    <div><span>报告生成：</span>{{ generated_at }}</div>
+  </div>
+</div>
+
+<!-- 核心金额汇总 -->
+{% if total_claims > 0 %}
+<div class="summary-box">
+  <h3>💰 仲裁请求总额</h3>
+  <div class="summary-row"><span>可主张总金额</span><span>{{ "%.2f"|format(total_claims) }} 元</span></div>
+  {% if overtime_pay > 0 %}<div class="summary-row"><span>加班费</span><span>{{ "%.2f"|format(overtime_pay) }} 元</span></div>{% endif %}
+  {% if termination_compensation > 0 %}<div class="summary-row"><span>违法解除赔偿金</span><span>{{ "%.2f"|format(termination_compensation) }} 元</span></div>{% endif %}
+  {% if notice_pay > 0 %}<div class="summary-row"><span>代通知金</span><span>{{ "%.2f"|format(notice_pay) }} 元</span></div>{% endif %}
+  {% if no_contract_pay > 0 %}<div class="summary-row"><span>未签合同双倍工资</span><span>{{ "%.2f"|format(no_contract_pay) }} 元</span></div>{% endif %}
+  {% if unused_leave_pay > 0 %}<div class="summary-row"><span>未休年假折算</span><span>{{ "%.2f"|format(unused_leave_pay) }} 元</span></div>{% endif %}
+  {% if social_security_gap > 0 %}<div class="summary-row"><span>社保差额</span><span>{{ "%.2f"|format(social_security_gap) }} 元</span></div>{% endif %}
+  {% if housing_fund_gap > 0 %}<div class="summary-row"><span>公积金差额</span><span>{{ "%.2f"|format(housing_fund_gap) }} 元</span></div>{% endif %}
+</div>
+{% endif %}
+
+<!-- 考勤数据 -->
+{% if attendance_data or monthly_overtime %}
+<div class="page-break"></div>
+<h2>一、考勤数据分析</h2>
+<p class="section-desc">基于上传的考勤文件进行的统计分析，包含月度加班时长明细。</p>
+
+{% if monthly_overtime %}
+<h3>月度加班明细</h3>
+<table>
+  <thead>
+    <tr><th>月份</th><th>加班时长（小时）</th><th>加班费估算（元）</th></tr>
+  </thead>
+  <tbody>
+  {% for month, hours in monthly_overtime.items()|sort %}
+    <tr>
+      <td>{{ month }}</td>
+      <td>{{ "%.1f"|format(hours) }}</td>
+      <td>{{ "%.2f"|format(hours * base_salary / 21.75 / 8 * 1.5) }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if attendance_stats %}
+<h3>考勤统计汇总</h3>
+<table>
+  <thead>
+    <tr><th>月份</th><th>出勤天数</th><th>加班时长(h)</th><th>请假天数</th><th>迟到/早退</th></tr>
+  </thead>
+  <tbody>
+  {% for s in attendance_stats %}
+    <tr>
+      <td>{{ s.period_start[:7] if s.period_start else '' }}</td>
+      <td>{{ s.attendance_days }}</td>
+      <td>{{ s.overtime_hours }}</td>
+      <td>{{ s.leave_days }}</td>
+      <td>{{ (s.late_count or 0) + (s.early_leave_count or 0) }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endif %}
+
+<!-- 权益计算明细 -->
+{% if calculation_detail %}
+<div class="page-break"></div>
+<h2>二、权益计算明细</h2>
+<div class="calculation">{{ calculation_detail }}</div>
+{% endif %}
+
+<!-- 社保公积金分析 -->
+{% if social_security_analysis and social_security_analysis.total_gap > 0 %}
+<div class="page-break"></div>
+<h2>三、社保/公积金缴纳差额分析</h2>
+<div class="info-grid">
+  <div class="info-item"><span class="info-label">实际月薪：</span>{{ "%.2f"|format(social_security_analysis.actual_salary) }} 元</div>
+  <div class="info-item"><span class="info-label">社保申报基数：</span>{{ "%.2f"|format(social_security_analysis.declared_salary) }} 元</div>
+  <div class="info-item"><span class="info-label">每月社保差额：</span>{{ "%.2f"|format(social_security_analysis.monthly_social_gap) }} 元</div>
+  <div class="info-item"><span class="info-label">每月公积金差额：</span>{{ "%.2f"|format(social_security_analysis.monthly_housing_gap) }} 元</div>
+  <div class="info-item"><span class="info-label">工作月数：</span>{{ social_security_analysis.work_months }} 个月</div>
+  <div class="info-item"><span class="info-label">累计总差额：</span><strong>{{ "%.2f"|format(social_security_analysis.total_gap) }} 元</strong></div>
+</div>
+{% endif %}
+
+<!-- 证据分析 -->
+{% if favorable_points or unfavorable_points or missing_evidence %}
+<div class="page-break"></div>
+<h2>四、证据分析</h2>
+<p class="section-desc">基于提交的材料进行的证据要点提取与评估。</p>
+
+{% if evidence_strength %}
+<p>证据强度评级：
+  <span class="strength {% if '强' in evidence_strength %}strong{% elif '中' in evidence_strength %}medium{% else %}weak{% endif %}">{{ evidence_strength }}</span>
+</p>
+{% endif %}
+
+{% if favorable_points %}
+<h3>✅ 有利证据点</h3>
+{% for p in favorable_points %}
+<div class="evidence-point favorable">
+  <strong>{{ p.description }}</strong>
+  <div class="evidence-meta">类型：{{ p.type }} | 权重：{{ p.weight }} | 法律依据：{{ p.legal_basis }}</div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if unfavorable_points %}
+<h3>⚠️ 不利证据点</h3>
+{% for p in unfavorable_points %}
+<div class="evidence-point unfavorable">
+  <strong>{{ p.description }}</strong>
+  <div class="evidence-meta">类型：{{ p.type }} | 权重：{{ p.weight }} | 法律依据：{{ p.legal_basis }}</div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if missing_evidence %}
+<h3>📋 缺失证据清单</h3>
+{% for m in missing_evidence %}
+<div class="evidence-point missing">⚠️ {{ m }}</div>
+{% endfor %}
+{% endif %}
+{% endif %}
+
+<!-- 法律依据 -->
+{% if legal_basis %}
+<div class="page-break"></div>
+<h2>五、法律依据</h2>
+<div class="legal-basis">
+  <ul>
+  {% for lb in legal_basis %}
+    <li>{{ lb }}</li>
+  {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<!-- 附录：十大认知误区 -->
+<div class="page-break"></div>
+<h2>附录：劳动仲裁十大认知误区</h2>
+<p class="section-desc">员工常见的理解错误，可能导致权益主张失败。以下内容供自检参考。</p>
+
+<div class="misconception">
+  <strong>误区一：合同写的工资才是工资</strong>
+  <p>实际到账的工资才是真实薪资标准。劳动合同写的可以是基本工资，不等于全部收入。证据：工资流水、个税记录、微信转账记录都算。</p>
+  <p class="legal-ref">法律依据：《劳动合同法》第47条，经济补偿按离职前十二个月平均工资</p>
+</div>
+
+<div class="misconception">
+  <strong>误区二：加班费按基本工资算</strong>
+  <p>加班费计算基数是离职前十二个月平均月工资（含绩效、奖金、补贴），不是合同上的"基本工资"。时薪 = 月均工资 ÷ 21.75 ÷ 8。</p>
+  <p class="legal-ref">法律依据：《工资支付暂行规定》第13条</p>
+</div>
+
+<div class="misconception">
+  <strong>误区三：年假过期作废是合法的</strong>
+  <p>年假不能规定过期作废。未休年假离职时必须折算成3倍工资支付。年假时效2年。</p>
+  <p class="legal-ref">法律依据：《职工带薪年休假条例》第5条</p>
+</div>
+
+<div class="misconception">
+  <strong>误区四：口头辞退不算数</strong>
+  <p>口头辞退也算违法解除劳动合同。要录音/录像/聊天记录保留证据。公司无法证明合法解除，就需要支付2N赔偿金。</p>
+  <p class="legal-ref">法律依据：《劳动合同法》第48条、第87条</p>
+</div>
+
+<div class="misconception">
+  <strong>误区五：公司的规章制度我必须遵守</strong>
+  <p>公司规章制度必须经过职工代表大会或全体职工讨论、与工会或职工代表协商确定、向员工公示告知。未经民主程序的规章制度无效。</p>
+  <p class="legal-ref">法律依据：《劳动合同法》第4条</p>
+</div>
+
+<div class="misconception">
+  <strong>误区六：劳动仲裁要收费</strong>
+  <p>劳动仲裁完全免费，劳动者一方不用缴纳任何费用。即使请律师，也可以申请法律援助（经济困难证明）。法律热线：12348。</p>
+  <p class="legal-ref">法律依据：《劳动争议调解仲裁法》第53条</p>
+</div>
+
+<div class="misconception">
+  <strong>误区七：试用期没有社保</strong>
+  <p>试用期也必须缴纳社保。入职30天内必须缴纳。试用期不缴社保是违法行为。</p>
+  <p class="legal-ref">法律依据：《社会保险法》第58条</p>
+</div>
+
+<div class="misconception">
+  <strong>误区八：工作不满一年没有年假</strong>
+  <p>年假天数按累计工龄计算，不是本单位工龄。之前公司工作2年，入职新公司即有5天年假。</p>
+  <p class="legal-ref">法律依据：《职工带薪年休假条例》第3条</p>
+</div>
+
+<div class="misconception">
+  <strong>误区九：自动离职就没有赔偿金</strong>
+  <p>公司违法行为迫使员工主动辞职，可以主张经济补偿金N。常见情形：拖欠工资、不缴社保、不提供劳动条件（强制待岗、调岗降薪）。</p>
+  <p class="legal-ref">法律依据：《劳动合同法》第38条、第46条</p>
+</div>
+
+<div class="misconception">
+  <strong>误区十：离职证明不能写不利于公司的内容</strong>
+  <p>离职证明只能写：劳动合同期限、解除/终止日期、工作岗位。禁止写：离职原因、员工表现、是否存在过错。违法内容可要求重新开具。</p>
+  <p class="legal-ref">法律依据：《劳动合同法》第50条、《就业促进法》第3条</p>
+</div>
+
+<div class="footer">
+  本报告由仲裁-skill 自动生成 | 仅供参考，具体仲裁请求以实际情况为准<br>
+  生成时间：{{ generated_at }}
+</div>
+
+</body>
+</html>

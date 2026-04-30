@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540">
+  <style>
+    text { font-family: "PingFang SC", "Microsoft YaHei", "SimHei", sans-serif; }
+  </style>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <polygon points="0 0, 8 4, 0 8" fill="#5a5a5a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="540" fill="#f8f6f3"/>
+  <text x="600" y="38" text-anchor="middle" fill="#1a1a1a" font-size="18" font-weight="700">仲裁-skill 完整流程</text>
+  <text x="600" y="58" text-anchor="middle" fill="#6a6a6a" font-size="11">用户上传文件 → AI分析 → 权益计算 → 证据评估 → 报告生成 → 仲裁指引</text>
+  <rect x="30" y="80" width="1100" height="60" rx="8" fill="#a8c5e6" opacity="0.2"/>
+  <text x="50" y="100" fill="#4a4a4a" font-size="11" font-weight="600">输入层 INPUT</text>
+  <text x="50" y="118" fill="#6a6a6a" font-size="11">考勤文件 · 工资流水 · 聊天截图 · 社保记录 · 劳动合同</text>
+  <rect x="30" y="165" width="1100" height="60" rx="8" fill="#a8c5e6" opacity="0.2"/>
+  <text x="50" y="185" fill="#4a4a4a" font-size="11" font-weight="600">解析层 PARSE</text>
+  <text x="50" y="203" fill="#6a6a6a" font-size="11">parse_attendance_file() — AI 读取原始文件返回结构化文本，无 API 依赖</text>
+  <rect x="30" y="250" width="1100" height="130" rx="8" fill="#9dd4c7" opacity="0.2"/>
+  <text x="50" y="270" fill="#4a4a4a" font-size="11" font-weight="600">核心计算层 CORE COMPUTATION</text>
+  <rect x="50" y="285" width="170" height="80" rx="10" fill="#a8c5e6" stroke="#4a4a4a" stroke-width="2"/>
+  <text x="135" y="310" text-anchor="middle" fill="#1a1a1a" font-size="13" font-weight="600">考勤分析</text>
+  <text x="135" y="328" text-anchor="middle" fill="#5a5a5a" font-size="10">chinese-calendar</text>
+  <text x="135" y="343" text-anchor="middle" fill="#5a5a5a" font-size="10">月度加班明细</text>
+  <text x="135" y="358" text-anchor="middle" fill="#5a5a5a" font-size="10">出勤天数统计</text>
+  <rect x="265" y="285" width="170" height="80" rx="10" fill="#9dd4c7" stroke="#4a4a4a" stroke-width="2"/>
+  <text x="350" y="310" text-anchor="middle" fill="#1a1a1a" font-size="13" font-weight="600">权益计算</text>
+  <text x="350" y="328" text-anchor="middle" fill="#5a5a5a" font-size="10">加班费 · 赔偿金</text>
+  <text x="350" y="343" text-anchor="middle" fill="#5a5a5a" font-size="10">代通知金 · 未签合同</text>
+  <text x="350" y="358" text-anchor="middle" fill="#5a5a5a" font-size="10">未休年假折算</text>
+  <rect x="480" y="285" width="170" height="80" rx="10" fill="#9dd4c7" stroke="#4a4a4a" stroke-width="2"/>
+  <text x="565" y="310" text-anchor="middle" fill="#1a1a1a" font-size="13" font-weight="600">社保公积金</text>
+  <text x="565" y="328" text-anchor="middle" fill="#5a5a5a" font-size="10">实际月薪 vs 申报基数</text>
+  <text x="565" y="343" text-anchor="middle" fill="#5a5a5a" font-size="10">社保差额 · 公积金差额</text>
+  <text x="565" y="358" text-anchor="middle" fill="#5a5a5a" font-size="10">经济补偿金主张</text>
+  <rect x="695" y="285" width="170" height="80" rx="10" fill="#9dd4c7" stroke="#4a4a4a" stroke-width="2"/>
+  <text x="780" y="310" text-anchor="middle" fill="#1a1a1a" font-size="13" font-weight="600">证据分析</text>
+  <text x="780" y="328" text-anchor="middle" fill="#5a5a5a" font-size="10">有利 · 不利 · 缺失</text>
+  <text x="780" y="343" text-anchor="middle" fill="#5a5a5a" font-size="10">证据强度评级</text>
+  <text x="780" y="358" text-anchor="middle" fill="#5a5a5a" font-size="10">估算权益金额</text>
+  <rect x="910" y="285" width="170" height="80" rx="10" fill="#f4e4c1" stroke="#4a4a4a" stroke-width="2"/>
+  <text x="995" y="310" text-anchor="middle" fill="#1a1a1a" font-size="13" font-weight="600">知识库</text>
+  <text x="995" y="328" text-anchor="middle" fill="#5a5a5a" font-size="10">十大认知误区</text>
+  <text x="995" y="343" text-anchor="middle" fill="#5a5a5a" font-size="10">申请书内容指南</text>
+  <text x="995" y="358" text-anchor="middle" fill="#5a5a5a" font-size="10">常用法律条款</text>
+  <line x1="220" y1="325" x2="265" y2="325" stroke="#5a5a5a" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="435" y1="325" x2="480" y2="325" stroke="#5a5a5a" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="650" y1="325" x2="695" y2="325" stroke="#5a5a5a" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="865" y1="325" x2="910" y2="325" stroke="#5a5a5a" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="30" y="405" width="1100" height="60" rx="8" fill="#f4e4c1" opacity="0.2"/>
+  <text x="50" y="425" fill="#4a4a4a" font-size="11" font-weight="600">输出层 OUTPUT</text>
+  <text x="50" y="443" fill="#6a6a6a" font-size="11">ComprehensivePdfFormatter — 完整仲裁证据报告（JSON · Excel · PDF · HTML）</text>
+  <rect x="30" y="480" width="1100" height="50" rx="8" fill="#e8e6e3" opacity="0.4"/>
+  <text x="50" y="500" fill="#4a4a4a" font-size="11" font-weight="600">仲裁指引层 ARB-ROADMAP</text>
+  <text x="50" y="518" fill="#6a6a6a" font-size="11">收集证据 → 提交申请 → 开庭 → 裁决执行</text>
+  <line x1="1150" y1="140" x2="1150" y2="165" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <line x1="1150" y1="225" x2="1150" y2="250" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <line x1="1150" y1="380" x2="1150" y2="405" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <line x1="1150" y1="465" x2="1150" y2="480" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+</svg>

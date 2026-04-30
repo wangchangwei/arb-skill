@@ -1,0 +1,22 @@
+{
+  "name": "@zc/arb-skill",
+  "version": "1.0.0",
+  "description": "劳动仲裁证据材料采集工具 — 帮普通员工收集证据、算清楚钱、准备材料。",
+  "main": "SKILL.md",
+  "keywords": ["claude-code", "skill", "labor-arbitration", "china", "legal"],
+  "author": "zc",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/arb-skill.git"
+  },
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "LICENSE",
+    "src/",
+    "templates/",
+    "docs/",
+    "requirements.txt"
+  ]
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4; margin: 2cm; }
+  body { font-family: "Microsoft YaHei", "SimSun", sans-serif; font-size: 11pt; line-height: 1.6; }
+  h1 { text-align: center; font-size: 22pt; margin-top: 120px; }
+  h2 { font-size: 16pt; border-bottom: 2px solid #333; padding-bottom: 5px; margin-top: 30px; }
+  h3 { font-size: 13pt; margin-top: 20px; }
+  .cover-info { text-align: center; margin-top: 60px; font-size: 14pt; line-height: 2.0; }
+  .cover-info p { margin: 5px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10pt; }
+  th, td { border: 1px solid #333; padding: 6px 8px; text-align: left; }
+  th { background-color: #f0f0f0; font-weight: bold; }
+  .anomaly { color: #cc0000; font-weight: bold; background-color: #fff2cc; }
+  .summary { font-weight: bold; background-color: #e8e8e8; }
+  .section-desc { color: #555; font-style: italic; margin: 10px 0; }
+  .footer { text-align: center; font-size: 9pt; color: #888; margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px; }
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<h1>劳动仲裁证据材料</h1>
+<div class="cover-info">
+  <p>当事人：{{ username }}</p>
+  <p>证据期间：{{ period_start }} — {{ period_end }}</p>
+  <p>采集日期：{{ collected_at }}</p>
+  <p>数据来源：飞书开放平台 API</p>
+</div>
+
+<!-- 考勤证据 -->
+<div class="page-break"></div>
+<h2>一、考勤证据</h2>
+<p class="section-desc">以下数据通过飞书开放平台 API 采集，包含用户 {{ username }} 在 {{ period_start }} 至 {{ period_end }} 期间的考勤打卡记录。</p>
+
+{% if attendance_records %}
+<h3>1.1 打卡流水记录</h3>
+<table>
+  <thead>
+    <tr><th>用户ID</th><th>打卡时间</th><th>打卡位置</th><th>打卡类型</th><th>打卡结果</th><th>备注</th></tr>
+  </thead>
+  <tbody>
+  {% for rec in attendance_records %}
+    <tr>
+      <td>{{ rec.user_id }}</td>
+      <td>{{ rec.check_time }}</td>
+      <td>{{ rec.location_name }}</td>
+      <td>{{ rec.type }}</td>
+      <td class="{% if rec.check_result not in ['正常'] %}anomaly{% endif %}">{{ rec.check_result }}</td>
+      <td>{{ rec.comment }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if attendance_stats %}
+<h3>1.2 考勤统计汇总</h3>
+<table>
+  <thead>
+    <tr><th>姓名</th><th>统计期间</th><th>出勤天数</th><th>迟到次数</th><th>早退次数</th><th>加班时长(h)</th><th>请假天数</th></tr>
+  </thead>
+  <tbody>
+  {% for s in attendance_stats %}
+    <tr>
+      <td>{{ s.user_name }}</td>
+      <td>{{ s.period_start }} ~ {{ s.period_end }}</td>
+      <td>{{ s.attendance_days }}</td>
+      <td>{{ s.late_count }}</td>
+      <td>{{ s.early_leave_count }}</td>
+      <td>{{ s.overtime_hours }}</td>
+      <td>{{ s.leave_days }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<!-- 沟通记录证据 -->
+{% if message_records %}
+<div class="page-break"></div>
+<h2>二、沟通记录证据</h2>
+<p class="section-desc">以下数据通过飞书开放平台 API 采集，包含相关聊天群/私聊中的消息记录。</p>
+
+<table>
+  <thead>
+    <tr><th>聊天ID</th><th>发送者</th><th>消息类型</th><th>发送时间</th><th>消息内容</th></tr>
+  </thead>
+  <tbody>
+  {% for msg in message_records %}
+    <tr>
+      <td>{{ msg.chat_id }}</td>
+      <td>{{ msg.sender_id }}</td>
+      <td>{{ msg.msg_type }}</td>
+      <td>{{ msg.create_time }}</td>
+      <td>{{ msg.content }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<!-- 数据来源说明 -->
+<div class="page-break"></div>
+<h2>三、数据来源说明</h2>
+<p>本证据材料中的所有数据均通过飞书开放平台 API 自动采集。</p>
+<ul>
+  <li>采集时间：{{ collected_at }}</li>
+  <li>数据来源平台：飞书（Feishu/Lark）</li>
+  <li>采集方式：飞书开放平台 Server API</li>
+  <li>考勤数据接口：/api/attendance/v1/user_flows/query, /api/attendance/v1/user_stats_datas/query</li>
+  <li>消息数据接口：/open-apis/im/v1/messages</li>
+</ul>
+
+<div class="footer">
+  本文档由仲裁-skill 自动生成 — 仅供参考，具体以原始平台数据为准
+</div>
+
+</body>
+</html>
