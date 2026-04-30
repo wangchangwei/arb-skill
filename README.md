@@ -32,50 +32,6 @@ pip install -r requirements.txt
 
 ---
 
-## 快速使用
-
-```python
-# 1. 解析考勤文件（AI 读取，返回结构化文本）
-from src.tools.file_reader import parse_attendance_file
-text = parse_attendance_file("考勤.xlsx")
-
-# 2. 计算权益（支持按月明细 + 中国日历）
-from src.calculators.rights_calc import calculate_rights
-r = calculate_rights(
-    base_salary=15000,
-    monthly_overtime={"2025-03": 12.5, "2025-04": 8.0},
-    work_months=24,
-    is_illegal_termination=True,
-)
-print(f"总金额: {r.total_claims:.2f} 元")
-
-# 3. 社保差额分析
-from src.calculators.social_security import analyze_social_security
-gap = analyze_social_security(actual_salary=15000, declared_salary=8000, work_months=24)
-print(f"累计差额: {gap.total_gap:.2f} 元")
-
-# 4. 生成完整报告（PDF 或 HTML fallback）
-from src.formatters.comprehensive_fmt import ComprehensiveReportData, ComprehensivePdfFormatter, EvidencePoint
-data = ComprehensiveReportData(
-    username="张三",
-    company_name="XX科技有限公司",
-    period_start="2025-01-01",
-    period_end="2025-12-31",
-    base_salary=15000.0,
-    total_claims=59310.0,
-    favorable_points=[
-        EvidencePoint(type="favorable", description="口头辞退无书面材料属违法解除",
-                     legal_basis="《劳动合同法》第48条", weight="重要")
-    ],
-    evidence_strength="中 - 建议补充书面辞退通知",
-    legal_basis=["《劳动合同法》第48条 - 违法解除", "《劳动合同法》第87条 - 2N赔偿"],
-)
-fmt = ComprehensivePdfFormatter(output_dir="./output")
-path = fmt.format(data)  # weasyprint 可用时输出 PDF，否则输出 HTML
-```
-
----
-
 ## 报告结构
 
 生成的证据包包含以下章节：
