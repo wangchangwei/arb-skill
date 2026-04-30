@@ -20,6 +20,12 @@
 
 ## 安装
 
+**方式一：Claude Code Skill 安装（推荐）**
+```bash
+npx skills add wangchangwei/arb-skill
+```
+
+**方式二：直接安装 Python 依赖**
 ```bash
 pip install -r requirements.txt
 ```
