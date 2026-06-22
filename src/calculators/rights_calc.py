@@ -141,13 +141,13 @@ def calculate_rights(
     )
 
     lines = []
-    lines.append(f"[Salary Base] Monthly: {base_salary:.2f} CNY, Daily: {daily_rate:.2f} CNY, Hourly: {hourly_rate:.2f} CNY")
+    lines.append(f"[工资基准] 月薪: {base_salary:.2f} 元, 日薪: {daily_rate:.2f} 元, 时薪: {hourly_rate:.2f} 元")
     if not HAS_CHINESE_CALENDAR:
-        lines.append("[WARNING] chinese-calendar not installed. Using estimated workday/holiday counts.")
+        lines.append("[警告] 未安装 chinese-calendar 库，将使用估算的工作日/节假日天数。")
     lines.append("")
 
     # 1. Overtime pay with monthly breakdown
-    lines.append("[1. Overtime Pay Calculation (Monthly Breakdown - China Calendar)]")
+    lines.append("[1. 加班费计算 (按月明细)]")
 
     monthly_breakdown = []
     total_overtime_pay = 0.0
@@ -204,10 +204,10 @@ def calculate_rights(
 
     elif total_overtime_hours and total_overtime_hours > 0:
         # Fallback: aggregate
-        lines.append(f"  [Aggregate - no monthly breakdown]")
-        lines.append(f"  Total: {total_overtime_hours:.1f} hours x {hourly_rate:.2f} CNY/h")
+        lines.append(f"  [汇总计算 - 无月度明细]")
+        lines.append(f"  总计: {total_overtime_hours:.1f} 小时 x {hourly_rate:.2f} 元/小时")
         total_overtime_pay = round(total_overtime_hours * hourly_rate * 1.5, 2)
-        lines.append(f"  Estimated (平日): {total_overtime_pay:.2f} CNY")
+        lines.append(f"  估算加班费 (按平日1.5倍): {total_overtime_pay:.2f} 元")
         grand_total_hours = total_overtime_hours
     else:
         lines.append("  无加班记录")
@@ -220,37 +220,37 @@ def calculate_rights(
     # 2. Unused annual leave
     if unpaid_leave_days > 0:
         result.unpaid_leave_pay = round(unpaid_leave_days * daily_rate * 3.0, 2)
-        lines.append("[2. Unused Annual Leave Compensation]")
-        lines.append(f"  {unpaid_leave_days:.1f} days x {daily_rate:.2f} x 3.0 = {result.unpaid_leave_pay:.2f} CNY")
-        lines.append("  Legal basis: Annual Leave Regulation Art.5 Sec.3")
+        lines.append("[2. 未休年假折算工资]")
+        lines.append(f"  {unpaid_leave_days:.1f} 天 x {daily_rate:.2f} x 3.0 = {result.unpaid_leave_pay:.2f} 元")
+        lines.append("  法律依据: 《职工带薪年休假条例》第五条第三款")
         lines.append("")
     else:
-        lines.append("[2. Unused Annual Leave] None")
+        lines.append("[2. 未休年假折算工资] 无")
 
     # 3. Illegal termination compensation (2N)
     if is_illegal_termination:
         years = max(1, work_months // 12)
         result.termination_compensation = round(years * 2 * base_salary, 2)
         lines.append("")
-        lines.append("[3. Illegal Termination Compensation (2N)]")
-        lines.append(f"  {years} years x {base_salary:.2f} x 2 = {result.termination_compensation:.2f} CNY")
-        lines.append("  Legal basis: Labor Contract Law Art.87")
+        lines.append("[3. 违法解除劳动合同赔偿金 (2N)]")
+        lines.append(f"  {years} 年 x {base_salary:.2f} x 2 = {result.termination_compensation:.2f} 元")
+        lines.append("  法律依据: 《劳动合同法》第八十七条")
 
     # 4. Notice pay
     result.notice_pay = base_salary
     lines.append("")
-    lines.append("[4. Notice Pay]")
-    lines.append(f"  1 month salary = {result.notice_pay:.2f} CNY")
-    lines.append("  Legal basis: Labor Contract Law Art.40")
+    lines.append("[4. 代通知金]")
+    lines.append(f"  1 个月工资 = {result.notice_pay:.2f} 元")
+    lines.append("  法律依据: 《劳动合同法》第四十条")
 
     # 5. No contract double pay
     if no_contract_months > 0:
         result.no_contract_months = no_contract_months
         result.no_contract_pay = round(no_contract_months * base_salary, 2)
         lines.append("")
-        lines.append("[5. No Contract Double Pay]")
-        lines.append(f"  {no_contract_months} months x {base_salary:.2f} = {result.no_contract_pay:.2f} CNY")
-        lines.append("  Legal basis: Labor Contract Law Art.82")
+        lines.append("[5. 未签订书面劳动合同二倍工资]")
+        lines.append(f"  {no_contract_months} 个月 x {base_salary:.2f} = {result.no_contract_pay:.2f} 元")
+        lines.append("  法律依据: 《劳动合同法》第八十二条")
 
     # Total
     result.total_claims = (
@@ -262,16 +262,16 @@ def calculate_rights(
     )
     lines.append("")
     lines.append("=" * 50)
-    lines.append(f"[TOTAL CLAIMS] {result.total_claims:.2f} CNY")
+    lines.append(f"[总计金额] {result.total_claims:.2f} 元")
     lines.append("")
-    lines.append("[Legal Basis Summary]")
+    lines.append("[适用的法律依据]")
     legal_basis = [
-        "Wage Provision Art.13 - Overtime calculation (平日150%/休日200%/法定假日300%)",
-        "Annual Leave Regulation Art.5 - Leave compensation",
-        "Labor Contract Law Art.40 - Notice pay",
-        "Labor Contract Law Art.44 - Wage payment",
-        "Labor Contract Law Art.87 - Illegal termination (2N)",
-        "Labor Contract Law Art.82 - No contract double pay",
+        "《工资支付暂行规定》第十三条 - 加班费计算标准（平日150%/休日200%/法定假日300%）",
+        "《职工带薪年休假条例》第五条 - 未休年假折算",
+        "《劳动合同法》第四十条 - 代通知金",
+        "《劳动合同法》第四十四条 - 工资支付",
+        "《劳动合同法》第八十七条 - 违法解除劳动合同赔偿金（2N）",
+        "《劳动合同法》第八十二条 - 未签订书面劳动合同二倍工资",
     ]
     for i, basis in enumerate(legal_basis, 1):
         lines.append(f"  {i}. {basis}")
